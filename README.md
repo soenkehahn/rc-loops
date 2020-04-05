@@ -1,6 +1,6 @@
 # rc-loops
 
-This is a for fun project where RCers can explore audio programming using [`looper`](https://github.com/soenkehahn/looper). `looper` is a tool that'll play back short (or longer) audio snippets in a loop. The little snippets are going to be created by scripts in this repo that we can write together. Here's how it works:
+This is a for fun project where RCers can explore audio programming using [`looper`](https://github.com/soenkehahn/looper). `looper` is a tool that'll play back short (or longer) audio snippets in a loop. The little snippets are going to be created by scripts in this repo that we can write together.
 
 ## feedback
 
