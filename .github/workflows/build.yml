@@ -1,0 +1,57 @@
+name: build
+on:
+  pull_request:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+    - name: install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes curl libsndfile1-dev portaudio19-dev
+    - name: cache ~/.stack
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack
+    - name: clone looper
+      uses: actions/checkout@v2
+      with:
+        repository: soenkehahn/looper
+        path: looper
+        ref: '3d56139d2d82010fe9480880558369061dace4cd'
+    - name: install looper
+      run: |
+        cd looper
+        stack install
+        cd ..
+    - name: checkout rc-loops
+      uses: actions/checkout@v2
+    - name: render audio file
+      run: |
+        export PATH="$HOME/.local/bin:$PATH"
+        looper run.sh --render rc-loops.wav
+
+    - name: create github release
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: v${{ github.run_number }}
+        draft: false
+        prerelease: false
+    - name: upload audio file as release asset
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./rc-loops.wav
+        asset_name: rc-loops.wav
+        asset_content_type: audio/wav
