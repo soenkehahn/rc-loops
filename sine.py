@@ -4,7 +4,7 @@ import math
 import sys
 
 frequency = 440
-volume = 0.05
+volume = 0.5
 tau = 2.0 * math.pi
 
 phase = 0
