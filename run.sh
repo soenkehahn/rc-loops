@@ -3,3 +3,4 @@
 set -eux
 ./sine.py
 ./noise.js
+./nibbles.py
